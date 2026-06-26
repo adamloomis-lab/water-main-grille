@@ -1,0 +1,315 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Oswald: condensed industrial signage display. Bitter: antique slab serif
+     body (slab type is the typeface of the 1800s industrial era). */
+  --font-display: 'Oswald', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Bitter', ui-serif, Georgia, 'Times New Roman', serif;
+
+  /* Charcoal, warm near-black base used across the site (industrial) */
+  --color-paper: #1e1916;
+  --color-paper-2: #15110e;
+  --color-paper-3: #2a221b;
+  --color-card: #28201a;
+
+  /* Cream type on the charcoal base */
+  --color-ink: #f2e8d7;
+  --color-ink-soft: #c5b7a2;
+  --color-ink-faint: #9a8c7c;
+
+  /* Blackened steel, dark industrial sections (hero, history, footer) */
+  --color-steel: #15110e;
+  --color-steel-2: #1e1813;
+  --color-steel-3: #29211a;
+  --color-steel-4: #342a21;
+
+  /* Brick, primary accent / CTA, pulled from the storefront brick & chairs */
+  --color-brick: #b03a28;
+  --color-brick-dark: #8a2c1d;
+  --color-brick-light: #cf5e48;
+  --color-on-brick: #fbf3ea;
+
+  /* Blue Tip, the match-head cobalt, used as a sparing secondary accent */
+  --color-bluetip: #2f6fb0;
+  --color-bluetip-light: #5d99d4;
+
+  /* Cream type on dark surfaces */
+  --color-cream: #f4ecdd;
+  --color-cream-dim: #c6b8a4;
+  --color-cream-faint: #97897a;
+
+  /* Lines / outlines */
+  --color-line: #3a3026;
+  --color-line-dark: #2c241c;
+
+  --color-error: #c0492f;
+
+  /* Type scale, Oswald display / Inter body */
+  --text-display-xl: 92px;
+  --text-display-xl--line-height: 0.98;
+  --text-display-xl--letter-spacing: 0.005em;
+  --text-display-xl--font-weight: 700;
+  --text-display-lg: 64px;
+  --text-display-lg--line-height: 1.02;
+  --text-display-lg--font-weight: 700;
+  --text-display-lg-mobile: 40px;
+  --text-display-lg-mobile--line-height: 1.05;
+  --text-display-lg-mobile--font-weight: 700;
+  /* Mobile-friendly section-heading size; pages bump to 40–44px at md+. */
+  --text-headline-lg: 33px;
+  --text-headline-lg--line-height: 1.12;
+  --text-headline-lg--font-weight: 600;
+  --text-headline-md: 32px;
+  --text-headline-md--line-height: 1.15;
+  --text-headline-md--font-weight: 600;
+  --text-headline-sm: 23px;
+  --text-headline-sm--line-height: 1.25;
+  --text-headline-sm--font-weight: 600;
+  --text-body-lg: 20px;
+  --text-body-lg--line-height: 1.72;
+  --text-body-md: 17px;
+  --text-body-md--line-height: 1.74;
+  --text-label-lg: 13px;
+  --text-label-lg--line-height: 1.2;
+  --text-label-lg--letter-spacing: 0.24em;
+  --text-label-lg--font-weight: 600;
+  --text-label-sm: 11px;
+  --text-label-sm--line-height: 1.2;
+  --text-label-sm--letter-spacing: 0.26em;
+  --text-label-sm--font-weight: 600;
+
+  --spacing-section-gap: 104px;
+  --spacing-margin-mobile: 20px;
+  --spacing-margin-desktop: 56px;
+
+  --radius-DEFAULT: 3px;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 400;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+  }
+  a, button:not(:disabled), [role='button'] {
+    cursor: pointer;
+  }
+  ::selection {
+    background-color: var(--color-brick);
+    color: var(--color-on-brick);
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 80rem;
+    padding-inline: var(--spacing-margin-mobile);
+  }
+  @media (min-width: 768px) {
+    .container-x {
+      padding-inline: var(--spacing-margin-desktop);
+    }
+  }
+
+  /* Eyebrow, uppercase tracked brick caption above a heading */
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--text-label-lg);
+    line-height: var(--text-label-lg--line-height);
+    letter-spacing: var(--text-label-lg--letter-spacing);
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--color-brick-light);
+  }
+
+  /* Thin brick rule under section headings, "draws" in on reveal */
+  .brick-rule {
+    display: inline-block;
+    width: 72px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-brick), transparent);
+  }
+
+  /* Brick check-mark / bullet for feature lists */
+  .check-list li {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+  .check-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 9999px;
+    background-color: var(--color-brick);
+    box-shadow: 0 0 0 3px rgba(176, 58, 40, 0.18);
+  }
+
+  /* Blackened-steel panel, subtle top sheen + vertical depth for dark sections.
+     background-color is set separately (not via the `background` shorthand) so a
+     companion `.brick-texture` can override background-image without wiping the
+     dark fill. */
+  .steel-panel {
+    background-color: var(--color-steel);
+    background-image:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 20%),
+      linear-gradient(180deg, var(--color-steel-2), var(--color-steel));
+  }
+
+  /* Riveted hairline divider for dark sections */
+  .steel-divider {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-line-dark) 12%,
+      var(--color-line-dark) 88%,
+      transparent
+    );
+  }
+
+  /* Legal / policy page prose */
+  .legal-prose h2 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 22px;
+    color: var(--color-ink);
+    margin-top: 2.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .legal-prose h2:first-child {
+    margin-top: 0;
+  }
+  .legal-prose a {
+    color: var(--color-brick);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal-prose ul {
+    list-style: disc;
+    padding-left: 1.4rem;
+  }
+  .legal-prose ul li {
+    margin-top: 0.4rem;
+  }
+  .legal-prose strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+}
+
+/* Brick texture: faint diagonal weave so steel sections read like masonry,
+   never loud. Pure CSS, no image weight. */
+.brick-texture {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.018) 0 1px,
+      transparent 1px 78px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.018) 0 1px,
+      transparent 1px 30px
+    );
+}
+
+/* Soft vignette so dark hero text/logo stays legible over imagery */
+.smoke-overlay {
+  background: radial-gradient(
+    120% 100% at 50% 0%,
+    rgba(21, 17, 14, 0.28) 0%,
+    rgba(21, 17, 14, 0.74) 62%,
+    rgba(21, 17, 14, 0.96) 100%
+  );
+}
+
+/* Slow Ken Burns drift on dark hero / section media */
+.kenburns {
+  animation: wmg-kenburns 30s ease-in-out infinite alternate;
+  transform-origin: center;
+  will-change: transform;
+}
+@keyframes wmg-kenburns {
+  from { transform: scale(1.05) translate3d(0, 0, 0); }
+  to { transform: scale(1.13) translate3d(0, -1.5%, 0); }
+}
+
+/* Parallax: useParallax writes --p (0..1 viewport progress); element drifts. */
+.parallax {
+  transform: translate3d(0, calc((var(--p, 0.5) - 0.5) * 2 * var(--p-amt, 28px)), 0);
+  will-change: transform;
+}
+
+/* ---- Scroll-reveal + entrance motion ---------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .rise { animation: wmg-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .rise-1 { animation-delay: 0.08s; }
+  .rise-2 { animation-delay: 0.2s; }
+  .rise-3 { animation-delay: 0.32s; }
+  .rise-4 { animation-delay: 0.44s; }
+  .rise-5 { animation-delay: 0.56s; }
+  @keyframes wmg-rise {
+    from { opacity: 0; transform: translateY(22px); filter: blur(3px); }
+    to { opacity: 1; transform: none; filter: blur(0); }
+  }
+
+  .reveal-ready .reveal,
+  .reveal-ready .reveal-group > * {
+    opacity: 0;
+    transform: translateY(26px) scale(0.985);
+    filter: blur(3px);
+    transition:
+      opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform, filter;
+  }
+  .reveal-ready .reveal.is-visible,
+  .reveal-ready .reveal-group.is-visible > * {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  .reveal-ready .reveal-group.is-visible > *:nth-child(2) { transition-delay: 0.1s; }
+  .reveal-ready .reveal-group.is-visible > *:nth-child(3) { transition-delay: 0.2s; }
+  .reveal-ready .reveal-group.is-visible > *:nth-child(4) { transition-delay: 0.3s; }
+  .reveal-ready .reveal-group.is-visible > *:nth-child(5) { transition-delay: 0.4s; }
+  .reveal-ready .reveal-group.is-visible > *:nth-child(6) { transition-delay: 0.5s; }
+
+  .brick-rule {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+  }
+  .reveal-ready .reveal.is-visible .brick-rule,
+  .reveal-ready .brick-rule.is-visible {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kenburns, .parallax { animation: none; transform: none; }
+}
+
+/* WCAG 2.4.7 keyboard focus */
+*:focus-visible {
+  outline: 2px solid var(--color-brick-light);
+  outline-offset: 3px;
+}
