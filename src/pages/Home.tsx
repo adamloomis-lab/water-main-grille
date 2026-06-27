@@ -30,7 +30,7 @@ export default function Home() {
   return (
     <>
       {/* ---------- HERO ---------- */}
-      <section className="relative flex min-h-[92vh] items-center overflow-hidden">
+      <section id="hero" className="relative flex min-h-[92vh] items-center overflow-hidden">
         <img
           src="/images/storefront-wide.webp"
           alt="The brick storefront of The Water Main Grille on Main Street in Wadsworth, Ohio"

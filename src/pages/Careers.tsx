@@ -1,34 +1,68 @@
 import { useState, useRef } from 'react'
-import type { FormEvent } from 'react'
-import { Check, ChevronDown, Clock, HeartHandshake, Sparkles } from 'lucide-react'
+import type { FormEvent, ChangeEvent } from 'react'
+import {
+  Clock,
+  HeartHandshake,
+  HandCoins,
+  UtensilsCrossed,
+  ChefHat,
+  Soup,
+  Droplets,
+  ConciergeBell,
+  CircleHelp,
+} from 'lucide-react'
 import { company } from '../data/site'
 import FactoryBackdrop from '../components/FactoryBackdrop'
+import { FloatField, IconCard, SuccessCheck, SheenSubmit } from '../components/FluidField'
 
 const perks = [
   { icon: HeartHandshake, title: 'Family Atmosphere', blurb: 'A tight-knit, family-run crew that has each other’s backs, shift after shift.' },
   { icon: Clock, title: 'Daytime Hours', blurb: 'We’re open 6am-2pm, Tuesday through Saturday. Your nights and Sundays stay yours.' },
-  { icon: Sparkles, title: 'Honest Pay & Tips', blurb: 'Competitive pay, a busy breakfast rush, and a loyal local following that tips well.' },
+  { icon: HandCoins, title: 'Honest Pay & Tips', blurb: 'Competitive pay, a busy breakfast rush, and a loyal local following that tips well.' },
+]
+
+// Single-select cards. `value` is byte-identical to the original <select>
+// options so the Netlify submission is unchanged.
+const POSITION_OPTIONS = [
+  { value: 'Server / Waitstaff', label: 'Server / Waitstaff', icon: UtensilsCrossed },
+  { value: 'Line Cook', label: 'Line cook', icon: ChefHat },
+  { value: 'Prep Cook', label: 'Prep cook', icon: Soup },
+  { value: 'Dishwasher', label: 'Dishwasher', icon: Droplets },
+  { value: 'Host / Counter', label: 'Host / Counter', icon: ConciergeBell },
+  { value: 'Anything available', label: 'Anything available', icon: CircleHelp },
+]
+
+const AVAILABILITY_OPTIONS = [
+  { value: 'Full-time', label: 'Full-time' },
+  { value: 'Part-time', label: 'Part-time' },
+  { value: 'Either', label: 'Either' },
 ]
 
 export default function Careers() {
   const [sent, setSent] = useState(false)
   const [error, setError] = useState(false)
   const [firstName, setFirstName] = useState('')
+  const [form, setForm] = useState({ name: '', phone: '', email: '', position: '', availability: '', experience: '' })
+  const formRef = useRef<HTMLFormElement>(null)
   const formCardRef = useRef<HTMLDivElement>(null)
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError(false)
-    const form = e.currentTarget
-    const fd = new FormData(form)
-    const nameVal = String(fd.get('name') || '')
+    const formEl = e.currentTarget
+    const fd = new FormData(formEl)
+    const first = form.name.trim().split(/\s+/)[0] || ''
     try {
       // Multipart submit so an attached resume file uploads to Netlify.
       const res = await fetch('/', { method: 'POST', body: fd })
       if (!res.ok) throw new Error()
-      setFirstName(nameVal.trim().split(/\s+/)[0] || '')
+      setFirstName(first)
       setSent(true)
-      form.reset()
+      setForm({ name: '', phone: '', email: '', position: '', availability: '', experience: '' })
+      formEl.reset()
       requestAnimationFrame(() =>
         formCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
       )
@@ -37,8 +71,8 @@ export default function Careers() {
     }
   }
 
-  const field =
-    'w-full rounded border border-line bg-card px-4 py-3.5 text-body-md text-ink placeholder:text-ink-faint focus:border-brick focus-visible:outline-none focus:ring-1 focus:ring-brick/40'
+  const fileField =
+    'w-full rounded border border-line bg-paper-2 px-4 py-3 text-body-md text-ink-soft file:mr-4 file:rounded file:border-0 file:bg-brick file:px-4 file:py-2 file:font-display file:text-[12px] file:uppercase file:tracking-[0.14em] file:text-on-brick hover:file:bg-brick-dark'
 
   return (
     <>
@@ -82,28 +116,34 @@ export default function Careers() {
             <h2 className="mt-4 font-display text-headline-md text-ink">Tell us about yourself</h2>
 
             {sent ? (
-              <div className="mt-8 flex flex-col items-center gap-4 rounded-lg border border-brick/40 bg-brick/5 px-6 py-12 text-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brick text-on-brick">
-                  <Check size={28} />
-                </span>
+              <div
+                className="mt-8 flex flex-col items-center gap-4 rounded-lg border border-brick/40 bg-brick/5 px-6 py-12 text-center"
+                style={{ animation: 'wmg-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both' }}
+              >
+                <SuccessCheck />
                 <p className="font-display text-headline-md text-ink">
-                  Thanks{firstName ? `, ${firstName}` : ''}!
+                  Thank You{firstName ? `, ${firstName}` : ''}!
                 </p>
                 <p className="text-body-md text-ink-soft">
                   {firstName ? `${firstName}, we` : 'We'}&rsquo;ve got your application and we&rsquo;ll
                   review it soon. If it looks like a fit, we&rsquo;ll reach out to set up a time to chat.
-                  Questions? Call us at {company.phone}.
+                  Questions? Call us at{' '}
+                  <a href={company.phoneHref} className="font-semibold text-brick hover:text-brick-light">
+                    {company.phone}
+                  </a>
+                  .
                 </p>
               </div>
             ) : (
               <form
+                ref={formRef}
                 name="application"
                 method="POST"
                 data-netlify="true"
                 netlify-honeypot="bot-field"
                 encType="multipart/form-data"
                 onSubmit={onSubmit}
-                className="mt-7 space-y-4"
+                className="mt-7 space-y-5"
               >
                 <input type="hidden" name="form-name" value="application" />
                 <p className="hidden">
@@ -112,74 +152,76 @@ export default function Careers() {
                   </label>
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="careers-name" className="sr-only">Full name</label>
-                    <input id="careers-name" className={field} type="text" name="name" placeholder="Full name" required />
-                  </div>
-                  <div>
-                    <label htmlFor="careers-phone" className="sr-only">Phone</label>
-                    <input id="careers-phone" className={field} type="tel" name="phone" placeholder="Phone" required />
-                  </div>
+                  <FloatField idPrefix="careers" name="name" label="Full name" value={form.name} onChange={handleChange} required />
+                  <FloatField idPrefix="careers" name="phone" label="Phone" type="tel" value={form.phone} onChange={handleChange} required />
                 </div>
-                <div>
-                  <label htmlFor="careers-email" className="sr-only">Email</label>
-                  <input id="careers-email" className={field} type="email" name="email" placeholder="Email" required />
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="relative">
-                    <label htmlFor="careers-position" className="sr-only">Position of interest</label>
-                    <select id="careers-position" name="position" defaultValue="" required className={`${field} appearance-none pr-11`}>
-                      <option value="" disabled>
-                        Position of interest
-                      </option>
-                      <option>Server / Waitstaff</option>
-                      <option>Line Cook</option>
-                      <option>Prep Cook</option>
-                      <option>Dishwasher</option>
-                      <option>Host / Counter</option>
-                      <option>Anything available</option>
-                    </select>
-                    <ChevronDown
-                      size={18}
-                      className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-faint"
-                    />
+                <FloatField idPrefix="careers" name="email" label="Email" type="email" value={form.email} onChange={handleChange} required />
+
+                {/* Position as single-select icon cards (value still submits via form.position) */}
+                <fieldset>
+                  <legend className="mb-3 block font-body text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-faint">
+                    Position of interest
+                  </legend>
+                  <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                    {POSITION_OPTIONS.map((o) => (
+                      <IconCard
+                        key={o.value}
+                        icon={o.icon}
+                        label={o.label}
+                        active={form.position === o.value}
+                        onClick={() =>
+                          setForm((prev) => ({ ...prev, position: prev.position === o.value ? '' : o.value }))
+                        }
+                      />
+                    ))}
                   </div>
-                  <div className="relative">
-                    <label htmlFor="careers-availability" className="sr-only">Availability</label>
-                    <select id="careers-availability" name="availability" defaultValue="" required className={`${field} appearance-none pr-11`}>
-                      <option value="" disabled>
-                        Availability
-                      </option>
-                      <option>Full-time</option>
-                      <option>Part-time</option>
-                      <option>Either</option>
-                    </select>
-                    <ChevronDown
-                      size={18}
-                      className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-faint"
-                    />
+                  <input type="hidden" name="position" value={form.position} required />
+                </fieldset>
+
+                {/* Availability as single-select pills */}
+                <fieldset>
+                  <legend className="mb-3 block font-body text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-faint">
+                    Availability
+                  </legend>
+                  <div className="flex flex-wrap gap-2.5">
+                    {AVAILABILITY_OPTIONS.map((o) => {
+                      const active = form.availability === o.value
+                      return (
+                        <button
+                          key={o.value}
+                          type="button"
+                          aria-pressed={active}
+                          onClick={() =>
+                            setForm((prev) => ({ ...prev, availability: active ? '' : o.value }))
+                          }
+                          className={`rounded-full border px-5 py-2.5 font-body text-body-md font-semibold transition-all duration-200 active:scale-[0.98] ${
+                            active
+                              ? 'border-brick bg-brick text-on-brick shadow-[0_10px_24px_-12px_rgba(176,58,40,0.7)]'
+                              : 'border-line bg-paper-2 text-ink hover:border-brick hover:bg-card'
+                          }`}
+                        >
+                          {o.label}
+                        </button>
+                      )
+                    })}
                   </div>
-                </div>
-                <div>
-                  <label htmlFor="careers-experience" className="sr-only">Experience and availability</label>
-                  <textarea
-                    id="careers-experience"
-                    className={field}
-                    name="experience"
-                    rows={4}
-                    placeholder="Tell us a little about your experience and when you can start"
-                  />
-                </div>
+                  <input type="hidden" name="availability" value={form.availability} required />
+                </fieldset>
+
+                <FloatField
+                  idPrefix="careers"
+                  name="experience"
+                  label="Tell us a little about your experience and when you can start"
+                  value={form.experience}
+                  onChange={handleChange}
+                  textarea
+                  rows={4}
+                />
                 <div>
                   <label className="mb-2 block text-[13px] uppercase tracking-[0.14em] text-ink-faint">
                     Resume (optional, PDF or Word)
                   </label>
-                  <input
-                    className="w-full rounded border border-line bg-card px-4 py-3 text-body-md text-ink-soft file:mr-4 file:rounded file:border-0 file:bg-brick file:px-4 file:py-2 file:font-display file:text-[12px] file:uppercase file:tracking-[0.14em] file:text-on-brick hover:file:bg-brick-dark"
-                    type="file"
-                    name="resume"
-                    accept=".pdf,.doc,.docx"
-                  />
+                  <input className={fileField} type="file" name="resume" accept=".pdf,.doc,.docx" />
                 </div>
                 {error && (
                   <p className="text-body-md text-error">
@@ -187,12 +229,7 @@ export default function Careers() {
                     {company.phone}.
                   </p>
                 )}
-                <button
-                  type="submit"
-                  className="w-full rounded bg-brick px-8 py-4 font-body text-[13px] font-semibold uppercase tracking-[0.16em] text-on-brick transition-colors hover:bg-brick-dark"
-                >
-                  Submit Application
-                </button>
+                <SheenSubmit>Submit Application</SheenSubmit>
               </form>
             )}
           </div>

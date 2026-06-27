@@ -1,37 +1,69 @@
 import { useState, useRef } from 'react'
-import type { FormEvent } from 'react'
-import { MapPin, Phone, Clock, Facebook, Check, Car, ChevronDown } from 'lucide-react'
+import type { FormEvent, ChangeEvent } from 'react'
+import { Link } from 'wouter'
+import {
+  MapPin,
+  Phone,
+  Clock,
+  Facebook,
+  Car,
+  HelpCircle,
+  UtensilsCrossed,
+  PartyPopper,
+  MessageCircle,
+  Briefcase,
+} from 'lucide-react'
 import { company } from '../data/site'
 import { faqs } from '../lib/seo'
 import HoursList from '../components/HoursList'
 import FactoryBackdrop from '../components/FactoryBackdrop'
+import { FloatField, IconCard, CrossLinkCard, SuccessCheck, SheenSubmit } from '../components/FluidField'
 
 const encode = (data: Record<string, string>) =>
   Object.keys(data)
     .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(data[k])}`)
     .join('&')
 
+// Single-select subject cards. `value` is byte-identical to the original
+// <select> options so the Netlify submission is unchanged.
+const SUBJECT_OPTIONS = [
+  { value: 'General Question', label: 'General question', icon: HelpCircle },
+  { value: 'Catering', label: 'Catering', icon: UtensilsCrossed },
+  { value: 'Private Event', label: 'Private event', icon: PartyPopper },
+  { value: 'Feedback', label: 'Feedback', icon: MessageCircle },
+]
+
 export default function Contact() {
   const [sent, setSent] = useState(false)
   const [error, setError] = useState(false)
   const [firstName, setFirstName] = useState('')
+  const [form, setForm] = useState({ name: '', phone: '', email: '', subject: '', message: '' })
   const formCardRef = useRef<HTMLDivElement>(null)
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError(false)
-    const form = e.currentTarget
-    const data = Object.fromEntries(new FormData(form) as never) as Record<string, string>
+    const first = form.name.trim().split(/\s+/)[0] || ''
     try {
       const res = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encode({ 'form-name': 'contact', ...data }),
+        body: encode({
+          'form-name': 'contact',
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+        }),
       })
       if (!res.ok) throw new Error()
-      setFirstName((data.name || '').trim().split(/\s+/)[0] || '')
+      setFirstName(first)
       setSent(true)
-      form.reset()
+      setForm({ name: '', phone: '', email: '', subject: '', message: '' })
       // Bring the confirmation into view so it's seen in place, not below the fold.
       requestAnimationFrame(() =>
         formCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
@@ -40,9 +72,6 @@ export default function Contact() {
       setError(true)
     }
   }
-
-  const field =
-    'w-full rounded border border-line bg-card px-4 py-3.5 text-body-md text-ink placeholder:text-ink-faint focus:border-brick focus-visible:outline-none focus:ring-1 focus:ring-brick/40'
 
   return (
     <>
@@ -118,17 +147,22 @@ export default function Contact() {
               <h2 className="mt-4 font-display text-headline-md text-ink">Get in Touch</h2>
 
               {sent ? (
-                <div className="mt-8 flex flex-col items-center gap-4 rounded-lg border border-brick/40 bg-brick/5 px-6 py-12 text-center">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brick text-on-brick">
-                    <Check size={28} />
-                  </span>
+                <div
+                  className="mt-8 flex flex-col items-center gap-4 rounded-lg border border-brick/40 bg-brick/5 px-6 py-12 text-center"
+                  style={{ animation: 'wmg-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both' }}
+                >
+                  <SuccessCheck />
                   <p className="font-display text-headline-md text-ink">
-                    Thank you{firstName ? `, ${firstName}` : ''}!
+                    Thank You{firstName ? `, ${firstName}` : ''}!
                   </p>
                   <p className="text-body-md text-ink-soft">
                     {firstName ? `${firstName}, your` : 'Your'} request is on its way to The Water Main
                     Grille. We&rsquo;ll get back to you as soon as we can. For a faster reply, give us a
-                    call at {company.phone}.
+                    call at{' '}
+                    <a href={company.phoneHref} className="font-semibold text-brick hover:text-brick-light">
+                      {company.phone}
+                    </a>
+                    .
                   </p>
                 </div>
               ) : (
@@ -138,7 +172,7 @@ export default function Contact() {
                   data-netlify="true"
                   netlify-honeypot="bot-field"
                   onSubmit={onSubmit}
-                  className="mt-7 space-y-4"
+                  className="mt-7 space-y-5"
                 >
                   <input type="hidden" name="form-name" value="contact" />
                   <p className="hidden">
@@ -147,65 +181,58 @@ export default function Contact() {
                     </label>
                   </p>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <label htmlFor="contact-name" className="sr-only">Name</label>
-                      <input id="contact-name" className={field} type="text" name="name" placeholder="Name" required />
+                    <FloatField idPrefix="contact" name="name" label="Name" value={form.name} onChange={handleChange} required />
+                    <FloatField idPrefix="contact" name="phone" label="Phone" type="tel" value={form.phone} onChange={handleChange} />
+                  </div>
+                  <FloatField idPrefix="contact" name="email" label="Email" type="email" value={form.email} onChange={handleChange} required />
+
+                  {/* Subject as single-select icon cards (value still submits via form.subject) */}
+                  <fieldset>
+                    <legend className="mb-3 block font-body text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-faint">
+                      What can we help with?
+                    </legend>
+                    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                      {SUBJECT_OPTIONS.map((o) => (
+                        <IconCard
+                          key={o.value}
+                          icon={o.icon}
+                          label={o.label}
+                          active={form.subject === o.value}
+                          onClick={() =>
+                            setForm((prev) => ({ ...prev, subject: prev.subject === o.value ? '' : o.value }))
+                          }
+                        />
+                      ))}
+                      <CrossLinkCard
+                        icon={Briefcase}
+                        label="Join our team"
+                        href="/careers"
+                        ariaLabel="Join our team, opens the job application form"
+                        LinkComponent={Link}
+                      />
                     </div>
-                    <div>
-                      <label htmlFor="contact-phone" className="sr-only">Phone</label>
-                      <input id="contact-phone" className={field} type="tel" name="phone" placeholder="Phone" />
-                    </div>
-                  </div>
-                  <div>
-                    <label htmlFor="contact-email" className="sr-only">Email</label>
-                    <input id="contact-email" className={field} type="email" name="email" placeholder="Email" required />
-                  </div>
-                  <div className="relative">
-                    <label htmlFor="contact-subject" className="sr-only">Subject</label>
-                    <select
-                      id="contact-subject"
-                      name="subject"
-                      defaultValue=""
-                      required
-                      className={`${field} appearance-none pr-11`}
-                    >
-                      <option value="" disabled>
-                        What can we help with?
-                      </option>
-                      <option>General Question</option>
-                      <option>Catering</option>
-                      <option>Private Event</option>
-                      <option>Careers / Employment</option>
-                      <option>Feedback</option>
-                    </select>
-                    <ChevronDown
-                      size={18}
-                      className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-faint"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="contact-message" className="sr-only">Message</label>
-                    <textarea
-                      id="contact-message"
-                      className={field}
-                      name="message"
-                      rows={5}
-                      placeholder="How can we help?"
-                      required
-                    />
-                  </div>
+                    {/* Hidden input carries the selected subject; required mirrors original. */}
+                    <input type="hidden" name="subject" value={form.subject} required />
+                  </fieldset>
+
+                  <FloatField
+                    idPrefix="contact"
+                    name="message"
+                    label="How can we help?"
+                    value={form.message}
+                    onChange={handleChange}
+                    required
+                    textarea
+                    rows={5}
+                  />
+
                   {error && (
                     <p className="text-body-md text-error">
                       Oops, there was an error sending your message. Please try again later, or call{' '}
                       {company.phone}.
                     </p>
                   )}
-                  <button
-                    type="submit"
-                    className="w-full rounded bg-brick px-8 py-4 font-body text-[13px] font-semibold uppercase tracking-[0.16em] text-on-brick transition-colors hover:bg-brick-dark"
-                  >
-                    Send Message
-                  </button>
+                  <SheenSubmit>Send Message</SheenSubmit>
                 </form>
               )}
             </div>

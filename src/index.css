@@ -304,8 +304,31 @@
   }
 }
 
+/* ---- Fluid-form + elevated-CTA motion (brick accent) ----------------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Sheen sweep across brick submit buttons / CTAs on hover */
+  @keyframes wmg-sheen {
+    0% { transform: translateX(-130%) skewX(-18deg); }
+    60%, 100% { transform: translateX(260%) skewX(-18deg); }
+  }
+  /* Drawn success checkmark */
+  @keyframes wmg-draw-check { to { stroke-dashoffset: 0; } }
+  /* Pop the success badge in */
+  @keyframes wmg-pop {
+    0% { opacity: 0; transform: scale(0.6); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  /* Glow pulse on the primary brick CTA (mobile bar + desktop pill) */
+  @keyframes wmg-glow-pulse {
+    0%, 100% { box-shadow: 0 8px 22px rgba(176, 58, 40, 0.35), 0 0 0 0 rgba(176, 58, 40, 0); }
+    50% { box-shadow: 0 10px 28px rgba(176, 58, 40, 0.5), 0 0 0 6px rgba(176, 58, 40, 0.08); }
+  }
+  .animate-glow-pulse { animation: wmg-glow-pulse 2.6s ease-in-out infinite; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kenburns, .parallax { animation: none; transform: none; }
+  .animate-glow-pulse { animation: none; }
 }
 
 /* WCAG 2.4.7 keyboard focus */

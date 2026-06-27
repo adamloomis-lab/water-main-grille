@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'wouter'
 import { Menu, X, Phone } from 'lucide-react'
 import Logo from './Logo'
+import MobileMenu from './MobileMenu'
 import { company } from '../data/site'
 import { useScrolled } from '../hooks/useScrolled'
 
@@ -76,35 +77,7 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {open && (
-        <div className="border-t border-line bg-paper lg:hidden">
-          <div className="container-x flex flex-col gap-1 py-5">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="rounded px-2 py-3 font-body text-sm font-semibold uppercase tracking-[0.16em] text-ink-soft hover:bg-paper-2 hover:text-brick"
-              >
-                {l.label}
-              </Link>
-            ))}
-            <a
-              href={company.phoneHref}
-              className="mt-2 inline-flex items-center justify-center gap-2 rounded border border-brick/45 px-5 py-3 font-body text-sm font-semibold uppercase tracking-[0.14em] text-brick"
-            >
-              <Phone size={17} /> {company.phone}
-            </a>
-            <Link
-              href="/menu"
-              onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center rounded bg-brick px-5 py-3 font-body text-sm font-semibold uppercase tracking-[0.14em] text-on-brick"
-            >
-              View Menu
-            </Link>
-          </div>
-        </div>
-      )}
+      <MobileMenu open={open} onClose={() => setOpen(false)} />
     </header>
   )
 }
