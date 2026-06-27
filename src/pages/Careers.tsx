@@ -6,7 +6,7 @@ import FactoryBackdrop from '../components/FactoryBackdrop'
 
 const perks = [
   { icon: HeartHandshake, title: 'Family Atmosphere', blurb: 'A tight-knit, family-run crew that has each other’s backs, shift after shift.' },
-  { icon: Clock, title: 'Daytime Hours', blurb: 'We’re open 6am–2pm, Tuesday through Saturday. Your nights and Sundays stay yours.' },
+  { icon: Clock, title: 'Daytime Hours', blurb: 'We’re open 6am-2pm, Tuesday through Saturday. Your nights and Sundays stay yours.' },
   { icon: Sparkles, title: 'Honest Pay & Tips', blurb: 'Competitive pay, a busy breakfast rush, and a loyal local following that tips well.' },
 ]
 

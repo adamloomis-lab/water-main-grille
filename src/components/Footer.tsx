@@ -68,7 +68,7 @@ export default function Footer() {
             ))}
           </ul>
           <p className="mt-4 text-[12px] uppercase tracking-[0.14em] text-cream-faint">
-            Breakfast all day · Lunch 11a–2p
+            Breakfast all day · Lunch 11a-2p
           </p>
         </div>
 

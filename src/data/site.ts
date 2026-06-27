@@ -35,16 +35,16 @@ export const company = {
 export const hours = [
   { day: 'Sunday', short: 'Sun', dow: 0, time: 'Closed' },
   { day: 'Monday', short: 'Mon', dow: 1, time: 'Closed' },
-  { day: 'Tuesday', short: 'Tue', dow: 2, time: '6:00 am – 2:00 pm' },
-  { day: 'Wednesday', short: 'Wed', dow: 3, time: '6:00 am – 2:00 pm' },
-  { day: 'Thursday', short: 'Thu', dow: 4, time: '6:00 am – 2:00 pm' },
-  { day: 'Friday', short: 'Fri', dow: 5, time: '6:00 am – 2:00 pm' },
-  { day: 'Saturday', short: 'Sat', dow: 6, time: '6:00 am – 2:00 pm' },
+  { day: 'Tuesday', short: 'Tue', dow: 2, time: '6:00 am - 2:00 pm' },
+  { day: 'Wednesday', short: 'Wed', dow: 3, time: '6:00 am - 2:00 pm' },
+  { day: 'Thursday', short: 'Thu', dow: 4, time: '6:00 am - 2:00 pm' },
+  { day: 'Friday', short: 'Fri', dow: 5, time: '6:00 am - 2:00 pm' },
+  { day: 'Saturday', short: 'Sat', dow: 6, time: '6:00 am - 2:00 pm' },
 ]
 
 export const hoursCompact = [
-  { day: 'Tue – Sat', time: '6:00 am – 2:00 pm' },
-  { day: 'Sun – Mon', time: 'Closed' },
+  { day: 'Tue - Sat', time: '6:00 am - 2:00 pm' },
+  { day: 'Sun - Mon', time: 'Closed' },
 ]
 
 // Schema.org openingHoursSpecification

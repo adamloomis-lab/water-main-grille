@@ -106,7 +106,7 @@ export default function Contact() {
               </div>
               <HoursList className="mt-4 -mx-2" />
               <p className="mt-3 px-1 text-[13px] text-ink-faint">
-                Breakfast served all day · Lunch 11am–2pm
+                Breakfast served all day · Lunch 11am-2pm
               </p>
             </div>
           </div>

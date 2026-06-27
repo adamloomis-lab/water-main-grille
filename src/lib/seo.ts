@@ -151,7 +151,7 @@ export function menuSchema() {
 const FAQS = [
   {
     q: 'What are The Water Main Grille’s hours?',
-    a: 'We’re open Tuesday through Saturday, 6:00 am to 2:00 pm, and closed Sunday and Monday. Breakfast is served all day; lunch runs 11am–2pm.',
+    a: 'We’re open Tuesday through Saturday, 6:00 am to 2:00 pm, and closed Sunday and Monday. Breakfast is served all day; lunch runs 11am-2pm.',
   },
   {
     q: 'Where is The Water Main Grille located?',
@@ -210,7 +210,7 @@ export function getPageMeta(rawPath: string): PageMeta {
     case '/':
       return {
         title: "The Water Main Grille | Wadsworth's Breakfast & Lunch Spot",
-        description: `${company.shortBlurb} Open Tue–Sat 6am–2pm. Call ${company.phone}.`,
+        description: `${company.shortBlurb} Open Tue-Sat 6am-2pm. Call ${company.phone}.`,
         canonical: pageUrl('/'),
         ogImage,
         jsonLd: [restaurantSchema(), websiteSchema(), faqSchema()],

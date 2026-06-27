@@ -69,7 +69,7 @@ export default function Menu() {
         <div className="container-x">
           <div className="mb-12 text-center">
             <h2 className="font-display text-headline-lg text-ink md:text-[40px]">Lunch</h2>
-            <p className="mt-2 text-label-lg uppercase tracking-[0.2em] text-brick">11am – 2pm</p>
+            <p className="mt-2 text-label-lg uppercase tracking-[0.2em] text-brick">11am - 2pm</p>
             <span className="brick-rule mx-auto mt-5 block w-[72px]" />
             <p className="mx-auto mt-5 max-w-xl text-body-md text-ink-soft">
               Subs, wraps, salads, melts &amp; burgers, all $10, with your choice of pub fries, fresh-cut

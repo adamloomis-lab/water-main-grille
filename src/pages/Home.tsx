@@ -54,7 +54,7 @@ export default function Home() {
             </div>
             <div className="rise rise-5 mt-9 flex flex-wrap items-center gap-x-7 gap-y-3 text-label-lg uppercase tracking-[0.16em] text-cream/75">
               <span className="inline-flex items-center gap-2">
-                <Clock size={15} className="text-brick-light" /> Tue–Sat · 6am–2pm
+                <Clock size={15} className="text-brick-light" /> Tue-Sat · 6am-2pm
               </span>
               <span className="inline-flex items-center gap-2">
                 <Star size={15} className="fill-brick-light text-brick-light" /> {ratingSummary.value}★ ·{' '}
